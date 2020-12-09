@@ -14,6 +14,7 @@ const readFile = fileName =>{
     return JSON.parse(fileContent)
 
 }
+
 router.get("/:id", (req, res, next) => {
     try {
       const projectsDB = readFile("projects.json")
@@ -72,6 +73,8 @@ router.get("/:id", (req, res, next) => {
             ID: uniqid(),
             modifiedAt: new Date(),
           }
+        
+         
   
           projectsDB.push(newProject)
   
@@ -81,6 +84,28 @@ router.get("/:id", (req, res, next) => {
           )
   
           res.status(201).send({ id: newProject.ID })
+
+
+    
+    const studentsFilePath = path.join(__dirname, "./students.json")
+    const fileAsABuffer = fs.readFileSync(studentsFilePath)
+    const fileAsAString = fileAsABuffer.toString()
+    const studentsArray = JSON.parse(fileAsAString)
+
+    const newStudentsArray = studentsArray.filter(student => student.ID !== "bp0idw7x4kihnzak7")
+
+        const modifiedStudent = req.body
+        
+        modifiedStudent.ProCount += 1
+        modifiedStudent.ID ="bp0idw7x4kihnzak7"
+
+        newStudentsArray.push(modifiedStudent)
+
+        fs.writeFileSync(studentsFilePath,JSON.stringify(newStudentsArray))
+      
+
+
+
         }
       } catch (error) {
         next(error)
@@ -119,14 +144,15 @@ router.get("/:id", (req, res, next) => {
               ID: req.params.id,
               modifiedAt: new Date(),
             }
+            newProject.push(modifiedProject)
+            fs.writeFileSync(path.join(__dirname, "projects.json"), JSON.stringify(newProject))
+        
+            res.send({ id: modifiedProject.ID })
 
           }
      
   
-      newProject.push(modifiedProject)
-      fs.writeFileSync(path.join(__dirname, "projects.json"), JSON.stringify(newProject))
-  
-      res.send({ id: modifiedProject.ID })
+     
     } catch (error) {
       next(error)
     }

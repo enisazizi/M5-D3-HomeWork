@@ -60,6 +60,7 @@ router.post("/",(req,res,next)=>{
 
     const newStudent = req.body
   newStudent.ID = uniqid()
+  newStudent.CountProjects = 0
     let count=0;
     
     studentsArray.map((student)=>{
