@@ -3,7 +3,7 @@ const fs = require("fs") // core module
 const path = require("path") // core module
 const uniqid = require("uniqid") // third party module
 const {check ,validationResult} = require("express-validator")
-
+const { studentProjects } = require("../projects/utils");
 const router = express.Router()
 
 const readFile = fileName =>{
@@ -121,5 +121,13 @@ router.delete("/:id", (req, res) => {
   
     res.status(204).send()
   })
+  router.get("/:id/projects", (req, res) => {
+    const projects = studentProjects(req.params.id);
+    if (!projects) {
+      res.status(400).send("ID does not exist");
+    } else {
+      res.status(200).send(projects);
+    }
+  });
   
   module.exports = router

@@ -3,6 +3,7 @@ const fs = require("fs")
 const path = require("path")
 const uniqid = require("uniqid")
 const { check, validationResult } = require("express-validator")
+const { findByID, addPropertyNoProject } = require("./utils");
 
 
 const router = express.Router()
@@ -14,6 +15,9 @@ const readFile = fileName =>{
     return JSON.parse(fileContent)
 
 }
+
+
+
 
 router.get("/:id", (req, res, next) => {
     try {
@@ -67,6 +71,7 @@ router.get("/:id", (req, res, next) => {
           err.httpStatusCode = 400
           next(err)
         } else {
+          addPropertyNoProject(req.body.studentID);
           const projectsDB = readFile("projects.json")
           const newProject = {
             ...req.body,
